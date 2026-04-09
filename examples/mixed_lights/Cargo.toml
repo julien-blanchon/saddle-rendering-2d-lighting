@@ -1,0 +1,13 @@
+[package]
+name = "saddle-rendering-2d-lighting-example-mixed-lights"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+bevy = { workspace = true }
+saddle-rendering-2d-lighting = { workspace = true }
+saddle-rendering-2d-lighting-example-common = { path = "../common" }
+
+[lints]
+workspace = true

@@ -1,0 +1,18 @@
+[package]
+name = "saddle-rendering-2d-lighting"
+version = "0.1.0"
+edition = "2024"
+publish = false
+repository = "https://github.com/julien-blanchon/saddle-rendering-2d-lighting"
+license = "MIT-0"
+description = "Flexible, reusable 2D lighting toolkit for Bevy games"
+
+[dependencies]
+bevy = "0.18"
+
+[workspace]
+
+[lints.clippy]
+too_many_arguments = "allow"
+type_complexity = "allow"
+nonstandard_macro_braces = "warn"
