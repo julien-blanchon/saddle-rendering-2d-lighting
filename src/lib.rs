@@ -17,8 +17,8 @@ mod materials;
 mod systems;
 
 pub use components::{
-    EmissiveSprite2d, LightOccluder2d, LightShadowMode2d, NormalMappedSprite2d,
-    OccluderShape2d, PointLight2d, SpotLight2d, TextureLight2d,
+    EmissiveSprite2d, LightOccluder2d, LightShadowMode2d, NormalMappedSprite2d, OccluderShape2d,
+    PointLight2d, SpotLight2d, TextureLight2d,
 };
 pub use config::{
     Lighting2dSettings, LightingBackend2d, LightingCompositeMode2d, ShadowFiltering2d,

@@ -465,8 +465,7 @@ pub fn sync_view_runtimes(
             mut child_target,
             mut child_layers,
             mut transform,
-        )) =
-            light_cameras.get_mut(runtime.light_camera)
+        )) = light_cameras.get_mut(runtime.light_camera)
         {
             child_camera.order = camera.order - 3;
             child_camera.clear_color = ClearColorConfig::Custom(Color::NONE);
@@ -483,8 +482,7 @@ pub fn sync_view_runtimes(
             mut child_target,
             mut child_layers,
             mut transform,
-        )) =
-            blur_x_cameras.get_mut(runtime.blur_x_camera)
+        )) = blur_x_cameras.get_mut(runtime.blur_x_camera)
         {
             child_camera.order = camera.order - 2;
             child_camera.clear_color = ClearColorConfig::Custom(Color::NONE);
@@ -501,8 +499,7 @@ pub fn sync_view_runtimes(
             mut child_target,
             mut child_layers,
             mut transform,
-        )) =
-            blur_y_cameras.get_mut(runtime.blur_y_camera)
+        )) = blur_y_cameras.get_mut(runtime.blur_y_camera)
         {
             child_camera.order = camera.order - 1;
             child_camera.clear_color = ClearColorConfig::Custom(Color::NONE);
@@ -545,8 +542,7 @@ pub fn sync_view_runtimes(
             };
         }
 
-        if let Ok((mut transform, mut visibility)) =
-            composite_quads.get_mut(runtime.composite_quad)
+        if let Ok((mut transform, mut visibility)) = composite_quads.get_mut(runtime.composite_quad)
         {
             *transform = Transform::from_xyz(area_center.x, area_center.y, 910.0)
                 .with_scale(logical_size.extend(1.0).max(Vec3::splat(1.0)));
@@ -908,7 +904,12 @@ pub fn sync_light_proxies(
                 ),
                 radius_and_angles: Vec4::new(world_radius, light.falloff.max(0.001), 0.0, 0.0),
                 direction_and_flags: Vec4::new(1.0, 0.0, segments.len() as f32, occlusion_mode),
-                texture_size_and_rotation: Vec4::new(world_radius * 2.0, world_radius * 2.0, 1.0, 0.0),
+                texture_size_and_rotation: Vec4::new(
+                    world_radius * 2.0,
+                    world_radius * 2.0,
+                    1.0,
+                    0.0,
+                ),
                 source_params: Vec4::new(light.source_radius.max(0.0), 0.0, 0.0, 0.0),
                 metadata: UVec4::new(light.shadow_mode as u32, light.occluder_mask, 0, 0),
                 segments: segment_uniforms(&segments),
@@ -963,7 +964,12 @@ pub fn sync_light_proxies(
                     segments.len() as f32,
                     occlusion_mode,
                 ),
-                texture_size_and_rotation: Vec4::new(world_radius * 2.0, world_radius * 2.0, 1.0, 0.0),
+                texture_size_and_rotation: Vec4::new(
+                    world_radius * 2.0,
+                    world_radius * 2.0,
+                    1.0,
+                    0.0,
+                ),
                 source_params: Vec4::new((light.source_width * 0.5).max(0.0), 0.0, 0.0, 0.0),
                 metadata: UVec4::new(light.shadow_mode as u32, light.occluder_mask, 0, 0),
                 segments: segment_uniforms(&segments),
@@ -1241,12 +1247,12 @@ pub fn sync_receiver_proxies(
             } else {
                 internal.white_image.clone()
             };
-            let normal_texture = if let Some(normal) = normal.filter(|_| settings.enable_normal_maps)
-            {
-                normal.normal_map.clone()
-            } else {
-                internal.flat_normal_image.clone()
-            };
+            let normal_texture =
+                if let Some(normal) = normal.filter(|_| settings.enable_normal_maps) {
+                    normal.normal_map.clone()
+                } else {
+                    internal.flat_normal_image.clone()
+                };
             let emissive_mask = emissive
                 .filter(|_| settings.enable_emissive)
                 .and_then(|emissive| emissive.mask.clone())
@@ -1317,8 +1323,7 @@ pub fn cleanup_orphaned_receiver_proxies(
     proxies: Query<(Entity, &ReceiverViewProxy), With<ReceiverViewProxyChild>>,
 ) {
     for (entity, proxy) in &proxies {
-        if cameras.get(proxy.owner_camera).is_err()
-            || receivers.get(proxy.owner_receiver).is_err()
+        if cameras.get(proxy.owner_camera).is_err() || receivers.get(proxy.owner_receiver).is_err()
         {
             commands.entity(entity).despawn();
         }
@@ -1351,7 +1356,10 @@ fn camera_logical_area(
     primary_window: Option<&Window>,
 ) -> (Vec2, Vec2) {
     if let Projection::Orthographic(orthographic) = projection {
-        return (orthographic.area.size().max(Vec2::ONE), orthographic.area.center());
+        return (
+            orthographic.area.size().max(Vec2::ONE),
+            orthographic.area.center(),
+        );
     }
 
     let logical_size = camera
@@ -1402,7 +1410,9 @@ fn collect_light_segments(
             continue;
         }
 
-        packed.extend(flatten_occluder_segments(occluder, global, images, mask_cache));
+        packed.extend(flatten_occluder_segments(
+            occluder, global, images, mask_cache,
+        ));
         if packed.len() >= MAX_OCCLUDER_SEGMENTS {
             break;
         }
@@ -1426,7 +1436,9 @@ fn collect_receiver_segments(
             continue;
         }
 
-        packed.extend(flatten_occluder_segments(occluder, global, images, mask_cache));
+        packed.extend(flatten_occluder_segments(
+            occluder, global, images, mask_cache,
+        ));
         if packed.len() >= MAX_OCCLUDER_SEGMENTS {
             break;
         }

@@ -201,11 +201,13 @@ pub(crate) fn occluder_bounding_radius(
         OccluderShape2d::Mask {
             mask,
             alpha_threshold,
-        } => resolve_mask_geometry(mask, *alpha_threshold, images, mask_cache)
-            .map_or(1.0, |geometry| {
+        } => resolve_mask_geometry(mask, *alpha_threshold, images, mask_cache).map_or(
+            1.0,
+            |geometry| {
                 let scale_radius = scale.max_element();
                 geometry.bounding_radius.max(1.0) * scale_radius
-            }),
+            },
+        ),
     }
 }
 
@@ -280,7 +282,9 @@ pub(crate) fn flatten_occluder_segments(
         .map(|point| global.transform_point(point.extend(0.0)).truncate())
         .collect::<Vec<_>>();
     let opacity = occluder.absorption.clamp(0.0, 1.0);
-    let tint = color_to_vec4(occluder.shadow_tint).truncate().clamp(Vec3::ZERO, Vec3::ONE);
+    let tint = color_to_vec4(occluder.shadow_tint)
+        .truncate()
+        .clamp(Vec3::ZERO, Vec3::ONE);
     let transmission = Vec3::splat(1.0 - opacity) + tint * opacity;
 
     let mut segments = Vec::with_capacity(world_points.len());
@@ -380,7 +384,8 @@ fn build_mask_geometry(image: &Image, alpha_threshold: u8) -> CachedMaskGeometry
     let mut opaque = vec![false; (width * height) as usize];
     for y in 0..height {
         for x in 0..width {
-            opaque[(y * width + x) as usize] = pixel_alpha(image, x as u32, y as u32) >= alpha_threshold;
+            opaque[(y * width + x) as usize] =
+                pixel_alpha(image, x as u32, y as u32) >= alpha_threshold;
         }
     }
 

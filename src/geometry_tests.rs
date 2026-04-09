@@ -5,8 +5,7 @@ use bevy::{
 };
 
 use crate::{
-    LightOccluder2d, OccluderShape2d,
-    TextureLight2d,
+    LightOccluder2d, OccluderShape2d, TextureLight2d,
     geometry::{
         flatten_occluder_segments, sample_texture_light_cookie, sprite_draw_size, sprite_uv_rect,
         truncate_segments,
@@ -14,7 +13,10 @@ use crate::{
 };
 
 fn empty_mask_context() -> (Assets<Image>, crate::geometry::OccluderMaskCache) {
-    (Assets::default(), crate::geometry::OccluderMaskCache::default())
+    (
+        Assets::default(),
+        crate::geometry::OccluderMaskCache::default(),
+    )
 }
 
 #[test]
@@ -57,12 +59,8 @@ fn circle_occluder_respects_requested_segments() {
     };
     let (images, mut cache) = empty_mask_context();
 
-    let segments = flatten_occluder_segments(
-        &occluder,
-        &GlobalTransform::default(),
-        &images,
-        &mut cache,
-    );
+    let segments =
+        flatten_occluder_segments(&occluder, &GlobalTransform::default(), &images, &mut cache);
 
     assert_eq!(segments.len(), 12);
 }
@@ -121,12 +119,8 @@ fn occluder_shadow_tint_is_encoded_as_transmission() {
     };
     let (images, mut cache) = empty_mask_context();
 
-    let segments = flatten_occluder_segments(
-        &occluder,
-        &GlobalTransform::default(),
-        &images,
-        &mut cache,
-    );
+    let segments =
+        flatten_occluder_segments(&occluder, &GlobalTransform::default(), &images, &mut cache);
 
     assert_eq!(segments.len(), 4);
     assert!(segments[0].transmission.x > segments[0].transmission.z);
@@ -144,9 +138,8 @@ fn mask_occluder_extracts_boundary_segments() {
         },
         TextureDimension::D2,
         &[
-            0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0,
+            0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0,
         ],
         TextureFormat::Rgba8UnormSrgb,
         RenderAssetUsages::default(),
@@ -162,15 +155,15 @@ fn mask_occluder_extracts_boundary_segments() {
     };
     let mut cache = crate::geometry::OccluderMaskCache::default();
 
-    let segments = flatten_occluder_segments(
-        &occluder,
-        &GlobalTransform::default(),
-        &images,
-        &mut cache,
-    );
+    let segments =
+        flatten_occluder_segments(&occluder, &GlobalTransform::default(), &images, &mut cache);
 
     assert!(segments.len() >= 4);
-    assert!(segments.iter().all(|segment| segment.occluder_groups == 0b1010));
+    assert!(
+        segments
+            .iter()
+            .all(|segment| segment.occluder_groups == 0b1010)
+    );
 }
 
 #[test]
@@ -183,9 +176,7 @@ fn texture_light_cookie_sampling_reads_image_intensity() {
             depth_or_array_layers: 1,
         },
         TextureDimension::D2,
-        &[
-            255, 255, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255,
-        ],
+        &[255, 255, 255, 255, 0, 0, 0, 255, 0, 0, 0, 255, 0, 0, 0, 255],
         TextureFormat::Rgba8UnormSrgb,
         RenderAssetUsages::default(),
     );

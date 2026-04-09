@@ -6,9 +6,16 @@ use bevy::{
 
 #[derive(Reflect, Clone, Debug)]
 pub enum OccluderShape2d {
-    Rectangle { half_size: Vec2 },
-    Circle { radius: f32, segments: u16 },
-    Polygon { points: Vec<Vec2> },
+    Rectangle {
+        half_size: Vec2,
+    },
+    Circle {
+        radius: f32,
+        segments: u16,
+    },
+    Polygon {
+        points: Vec<Vec2>,
+    },
     Mask {
         mask: Handle<Image>,
         alpha_threshold: f32,
